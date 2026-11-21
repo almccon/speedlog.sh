@@ -18,7 +18,7 @@ if [ ! -s "$LOG" ]; then
   echo "timestamp,link,iface,ssid,bssid,rssi_dbm,noise_dbm,channel,tx_rate_mbps,ping_ms,jitter_ms,packet_loss_pct,down_mbps,up_mbps,server,isp,result_url" > "$LOG"
 fi
 
-TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+TS=$(date +%Y-%m-%dT%H:%M:%S%z)
 
 # Which interface carries the default route right now, and is it Wi-Fi?
 IFACE=$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')

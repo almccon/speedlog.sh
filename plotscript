@@ -8,7 +8,7 @@ stats ARG1 using 10 name "PING"
 stats ARG1 using ($13*1e6) name "DOWNLOAD"
 stats ARG1 using ($14*1e6) name "UPLOAD"
 set xdata time
-set timefmt "%Y-%m-%dT%H:%M:%SZ"
+set timefmt "%Y-%m-%dT%H:%M:%S%z"
 set terminal svg size 1280, 800 dynamic
 set output ARG2
 set multiplot
@@ -57,7 +57,7 @@ if (empty_range != 1 && exists("xrange_from") && exists("xrange_to")) \
 if (!exists("plot_title")) plot_title = "Speedtest Results";
 set title plot_title
 set timestamp "plotted %F %T %Z"
-set xlabel "Measurement Date (UTC)"
+set xlabel "Measurement Date (Local)"
 set ylabel "Bandwidth" offset -12, 0
 set xtics format "%Y-%m-%d\n%H:%M:%S" out
 
