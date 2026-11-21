@@ -8,7 +8,7 @@ stats ARG1 using 10 name "PING"
 stats ARG1 using ($13*1e6) name "DOWNLOAD"
 stats ARG1 using ($14*1e6) name "UPLOAD"
 set xdata time
-set timefmt "%Y-%m-%dT%H:%M:%S%z"
+set timefmt "%Y-%m-%dT%H:%M:%S"
 set terminal svg size 1280, 800 dynamic
 set output ARG2
 set multiplot
