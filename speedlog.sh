@@ -29,10 +29,14 @@ if [ -z "$IFACE" ]; then
   LINK=none
 elif [ "$IFACE" = "$WIFI_DEV" ]; then
   LINK=wifi
+  # ipconfig getsummary gives unredacted SSID/BSSID on macOS 14.5+
+  # (requires: sudo ipconfig setverbose 1  — persists across reboots)
+  IPC=$(ipconfig getsummary "$IFACE" 2>/dev/null)
+  SSID=$(echo "$IPC"  | awk -F' : ' '/^ +SSID :/{print $2}')
+  BSSID=$(echo "$IPC" | awk -F' : ' '/^ +BSSID :/{print $2}')
+  # wdutil still provides signal metrics even though it redacts SSID/BSSID
   W=$(wdutil info 2>/dev/null)
   field() { echo "$W" | awk -F' : ' -v k="$1" '{gsub(/^ +| +$/,"",$1)} $1==k{print $2; exit}'; }
-  SSID=$(field "SSID")
-  BSSID=$(field "BSSID")
   RSSI=$(field "RSSI" | awk '{print $1}')
   NOISE=$(field "Noise" | awk '{print $1}')
   CHAN=$(field "Channel")

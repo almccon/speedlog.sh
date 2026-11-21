@@ -36,9 +36,9 @@ locations and plot them.
 - Requires `jq` (built into macOS 15+, else Homebrew).
 - Known caveats: recent macOS may show SSID/BSSID as `<redacted>`; cron
   may need Full Disk Access; no tests run while the laptop sleeps.
-- Tested and working on wired and Wi-Fi. On recent macOS, SSID/BSSID show as
-  `<redacted>` due to privacy restrictions — all other Wi-Fi fields (RSSI, noise,
-  channel, tx rate) are populated correctly.
+- Tested and working on wired and Wi-Fi. SSID/BSSID use `ipconfig getsummary`
+  (requires `sudo ipconfig setverbose 1` once — persists across reboots); signal
+  metrics (RSSI, noise, channel, tx rate) still come from `wdutil info`.
 
 ## Privacy
 Never commit log files (`*.csv`, `speedlog/` are in `.gitignore`).
