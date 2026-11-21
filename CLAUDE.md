@@ -8,10 +8,13 @@ locations and plot them.
 
 ## Background and decisions
 - Replaced sivel/speedtest-cli (archived 2026; Homebrew disabling it)
-  with **Ookla's official Speedtest CLI** (`speedtest`). librespeed-cli
-  was the open-source alternative considered.
-- Ookla's CLI needs `--accept-license --accept-gdpr` to run unattended.
-  It reports bandwidth in **bytes per second**; the script converts to Mbps.
+  with **librespeed-cli** (`brew tap librespeed/tap && brew install librespeed-cli`).
+  Ookla's official CLI was tried first but rate-limited aggressively even at
+  20-minute intervals. librespeed-cli has no rate limits and needs no license flags.
+- librespeed-cli outputs a JSON array; fields are snake_case (`.ping`, `.download`,
+  etc.) and bandwidth is already in **Mbps**. Packet loss, ISP name, and client IP
+  are not available; those CSV columns stay empty. The `share` URL field is empty
+  unless the server supports it.
 - Main machine: a macOS laptop that moves between wired Ethernet and
   several Wi-Fi networks, so every log row records which connection it
   used rather than keeping separate logs.
@@ -29,11 +32,13 @@ locations and plot them.
 - Columns: timestamp (UTC), link (wired/wifi/none), iface, ssid, bssid,
   rssi_dbm, noise_dbm, channel, tx_rate_mbps, ping_ms, jitter_ms,
   packet_loss_pct, down_mbps, up_mbps, server, isp, result_url.
-- Failed tests are logged as rows with server = "FAILED" (network error or no link) or "RATE_LIMITED" (Ookla rate limit hit).
+- Failed tests are logged as rows with server = "FAILED" (network error or no link).
 - Requires `jq` (built into macOS 15+, else Homebrew).
 - Known caveats: recent macOS may show SSID/BSSID as `<redacted>`; cron
   may need Full Disk Access; no tests run while the laptop sleeps.
-- Tested and working on a wired connection; Wi-Fi rows not yet verified.
+- Tested and working on wired and Wi-Fi. On recent macOS, SSID/BSSID show as
+  `<redacted>` due to privacy restrictions — all other Wi-Fi fields (RSSI, noise,
+  channel, tx rate) are populated correctly.
 
 ## Privacy
 Never commit log files (`*.csv`, `speedlog/` are in `.gitignore`).

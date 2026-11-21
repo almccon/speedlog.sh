@@ -46,18 +46,16 @@ if [ "$LINK" = none ]; then
   RES=',,,,,"FAILED",,'
 else
   TMPFILE=$(mktemp)
-  R=$(speedtest --accept-license --accept-gdpr -f json 2>"$TMPFILE")
+  R=$(librespeed-cli --json --share 2>"$TMPFILE")
   EXIT=$?
   STDERR=$(cat "$TMPFILE"); rm -f "$TMPFILE"
   if [ $EXIT -eq 0 ]; then
     RES=$(echo "$R" | jq -r '[
-        .ping.latency, .ping.jitter, (.packetLoss // ""),
-        (.download.bandwidth * 8 / 1e6 * 100 | round / 100),
-        (.upload.bandwidth   * 8 / 1e6 * 100 | round / 100),
-        (.server.name + " (" + .server.location + ")"), .isp, .result.url
+        .[0].ping, .[0].jitter, "",
+        (.[0].download * 100 | round / 100),
+        (.[0].upload   * 100 | round / 100),
+        .[0].server.name, "", .[0].share
       ] | @csv')
-  elif echo "$STDERR" | grep -q "Limit reached"; then
-    RES=',,,,,"RATE_LIMITED",,'
   else
     RES=',,,,,"FAILED",,'
   fi
