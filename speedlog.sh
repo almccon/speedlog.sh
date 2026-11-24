@@ -65,7 +65,11 @@ else
   fi
 fi
 
-printf '%s,%s,%s,"%s",%s,%s,%s,"%s",%s,%s\n' \
-  "$TS" "$LINK" "$IFACE" "$SSID" "$BSSID" "$RSSI" "$NOISE" "$CHAN" "$TXRATE" "$RES" >> "$LOG"
+ROW=$(printf '%s,%s,%s,"%s",%s,%s,%s,"%s",%s,%s\n' \
+  "$TS" "$LINK" "$IFACE" "$SSID" "$BSSID" "$RSSI" "$NOISE" "$CHAN" "$TXRATE" "$RES")
+for i in 1 2 3 4 5; do
+  echo "$ROW" >> "$LOG" && break
+  sleep 2
+done
 
 chown "$OWNER" "$(dirname "$LOG")" "$LOG" 2>/dev/null
